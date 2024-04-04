@@ -1,3 +1,4 @@
+import { NavLink } from './nav-lint'
 import { Logo } from './logo'
 
 export function Header() {
@@ -5,12 +6,8 @@ export function Header() {
     <div className="flex items-center gap-5 py-2">
       <Logo />
       <nav className="flex items-center gap-5">
-        <a href="" className="text-sm font-medium text-zinc-300">
-          Eventos
-        </a>
-        <a href="" className="text-sm font-medium">
-          Partcipantes
-        </a>
+        <NavLink href="/eventos">Eventos</NavLink>
+        <NavLink href="/participantes">Participantes</NavLink>
       </nav>
     </div>
   )
