@@ -28,7 +28,7 @@ interface Attendee {
 }
 
 export function AttendeeList() {
-  const [, setSearch] = useState('')
+  const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [attendees, setAttendees] = useState<Attendee[]>([])
   const [total, setTotal] = useState(0)
@@ -36,19 +36,26 @@ export function AttendeeList() {
   const totalPages = Math.ceil(total / 10)
 
   useEffect(() => {
-    fetch(
-      `http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees?pageIndex=${page - 1}`,
+    const url = new URL(
+      'http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees',
     )
+    url.searchParams.set('pageIndex', String(page - 1))
+    if (search.length > 0) {
+      url.searchParams.set('query', search)
+    }
+
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
         setAttendees(data.attendees)
         setTotal(data.total)
       })
-  }, [page])
+  }, [page, search])
 
   function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
     setSearch(event.target.value)
+    setPage(1)
   }
   function goToFirstPage() {
     setPage(1)
@@ -72,7 +79,7 @@ export function AttendeeList() {
           <Search className="size-4 text-emerald-300" />
           <input
             onChange={onSearchInputChanged}
-            className="flex-1 border-0 bg-transparent p-0 text-sm outline-none"
+            className="flex-1 border-0 bg-transparent p-0 text-sm outline-none focus:ring-0"
             placeholder="Buscar particpante..."
           />
         </div>
